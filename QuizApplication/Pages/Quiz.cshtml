@@ -1,0 +1,38 @@
+@page
+@model QuizApplication.Pages.QuizModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take a Quiz</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        Take a Quiz
+    </header>
+
+    <form method="post" class="quiz-form">
+        @foreach (var question in Model.Questions)
+        {
+            <div class="question">
+                <h3>@question.Text</h3>
+                <p><strong>Points:</strong> @question.Score</p>
+
+                @for (int i = 0; i < question.Choices.Length; i++)
+                {
+                    <div class="choice">
+                        <input type="radio" id="q@question.Id-choice@i" name="Answers[@question.Id]" value="@i" />
+                        <label for="q@question.Id-choice@i">@question.Choices[i]</label>
+                    </div>
+                }
+            </div>
+        }
+
+        <button type="submit" class="btn-submit">Submit Answers</button>
+    </form>
+</div>
+</body>
+</html>

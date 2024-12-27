@@ -1,0 +1,18 @@
+@page "{score:int}"
+@model QuizApplication.Pages.ScoreModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Score</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div class="container">
+    <h1 class="title">Quiz Completed!</h1>
+    <p class="score">You scored: <strong>@Model.Score</strong></p>
+    <a href="/Quiz" class="btn-submit">Take Another Quiz</a>
+</div>
+</body>
+</html>

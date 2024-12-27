@@ -1,0 +1,75 @@
+@page "{id:int}"
+@model QuizApplication.Pages.EditQuestionModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Question</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <header>
+        Edit Question
+    </header>
+
+    <main>
+        <form method="post" id="edit-form">
+            <div class="form-group">
+                <label for="questionText">Question Text:</label>
+                <input type="text" id="questionText" asp-for="QuestionText" required />
+            </div>
+
+            <div class="form-group">
+                <label>Choices:</label>
+                <div id="choices-container">
+                    @for (int i = 0; i < Model.Choices.Count; i++)
+                    {
+                        <div class="choice-item">
+                            <input type="text" name="Choices[@i]" value="@Model.Choices[i]" required />
+                            <input type="radio" name="CorrectAnswer" value="@i" @(Model.CorrectAnswer == i ? "checked" : "") />
+                            <label>Select as Correct</label>
+                            <button type="button" class="btn-remove" onclick="removeChoice(this)">Remove</button>
+                        </div>
+                    }
+                </div>
+                <button type="button" class="btn-add" onclick="addChoice()">Add Choice</button>
+            </div>
+
+            <div class="form-group">
+                <label for="score">Score:</label>
+                <input type="number" id="score" asp-for="Score" required />
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">Save Changes</button>
+                <a href="/Questions" class="btn-cancel">Cancel</a>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        function addChoice() {
+            const container = document.getElementById('choices-container');
+            const index = container.children.length;
+
+            const choiceDiv = document.createElement('div');
+            choiceDiv.classList.add('choice-item');
+
+            choiceDiv.innerHTML = `
+                <input type="text" name="Choices[${index}]" required />
+                <input type="radio" name="CorrectAnswer" value="${index}" />
+                <label>Select as Correct</label>
+                <button type="button" class="btn-remove" onclick="removeChoice(this)">Remove</button>
+            `;
+
+            container.appendChild(choiceDiv);
+        }
+
+        function removeChoice(button) {
+            const choiceDiv = button.parentElement;
+            choiceDiv.remove();
+        }
+    </script>
+</body>
+</html>

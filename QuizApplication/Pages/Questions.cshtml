@@ -1,0 +1,96 @@
+@page
+@model QuizApplication.Pages.QuestionsModel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Questions</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <header>
+        Manage Questions
+    </header>
+
+    <main>
+        <form method="post" asp-page-handler="Create">
+            <div class="form-group">
+                <label for="questionText">Question:</label>
+                <input type="text" id="questionText" asp-for="QuestionText" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label>Choices:</label>
+                <div id="choices-container">
+                    @for (int i = 0; i < Model.Choices.Count; i++)
+                    {
+                        <div class="choice-item">
+                            <input type="text" name="Choices[@i]" value="@Model.Choices[i]" class="form-control choice-input" required />
+                            <input type="radio" name="CorrectAnswer" value="@i" @(Model.CorrectAnswer == i ? "checked" : "") />
+                            <label>Select as Correct</label>
+                            <button type="button" class="btn-remove" onclick="removeChoice(this)">Remove</button>
+                        </div>
+                    }
+                </div>
+                <button type="button" class="btn-add" onclick="addChoice()">Add Choice</button>
+            </div>
+
+            <div class="form-group">
+                <label for="score">Score:</label>
+                <input type="number" id="score" asp-for="Score" class="form-control" required />
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">Add Question</button>
+            </div>
+        </form>
+
+        <!-- Add space between sections -->
+        <div class="section-spacing"></div>
+
+        <h2>Existing Questions</h2>
+        <ul>
+            @foreach (var question in Model.Questions)
+            {
+                <li>
+                    <div class="question-item">
+                        <strong>@question.Text</strong> (Score: @question.Score)
+                        <div class="button-group">
+                            <form method="post" asp-page-handler="Delete" class="inline-form">
+                                <input type="hidden" name="id" value="@question.Id" />
+                                <button type="submit" class="btn-remove">Delete</button>
+                            </form>
+                            <a asp-page="/EditQuestion" asp-route-id="@question.Id" class="btn-edit">Edit</a>
+                        </div>
+                    </div>
+                </li>
+            }
+        </ul>
+    </main>
+
+    <script>
+        function addChoice() {
+            const container = document.getElementById('choices-container');
+            const index = container.children.length;
+
+            const choiceDiv = document.createElement('div');
+            choiceDiv.classList.add('choice-item');
+
+            choiceDiv.innerHTML = `
+                <input type="text" name="Choices[${index}]" class="form-control choice-input" required />
+                <input type="radio" name="CorrectAnswer" value="${index}" />
+                <label>Select as Correct</label>
+                <button type="button" class="btn-remove" onclick="removeChoice(this)">Remove</button>
+            `;
+
+            container.appendChild(choiceDiv);
+        }
+
+        function removeChoice(button) {
+            const choiceDiv = button.parentElement;
+            choiceDiv.remove();
+        }
+    </script>
+</body>
+</html>
